@@ -1,5 +1,5 @@
-<%@ page import="com.zderko.dao.EmployeeDao,com.zderko.bean.Employee"%>
-<%@ page import="com.zderko.dao.DepartmentDao,com.zderko.bean.Department"%>
+<%@ page import="com.zderko.dao.EmployeeDao,com.zderko.entity.Employee"%>
+<%@ page import="com.zderko.dao.DepartmentDao,com.zderko.entity.Department"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.List" %>
 <%
@@ -19,7 +19,7 @@
 </head>
 <body>		
 	<h1>Edit Form</h1>
-	<form action="editEmployee.jsp" method="post">
+	<form action="editEmployeeSearch.jsp" method="post">
 		<input type="hidden" name="em_id" value="<%=employee.getEm_id()%>" />
 		<table>
 			<tr>
@@ -42,11 +42,13 @@
 			<tr>
 				<td colspan="2">
 					<input type="submit" value="Save"/>
-						<a href="/TestProject/searchview.jsp?em_name=${em_name}&page=${pageNum}"><input type="button" value="Cancell"/></a>
+					<a href="searchview.jsp?em_name=${em_name}&page=${pageNum}"><input type="button" value="Cancell"/></a>
 				</td>
 			</tr>
 		</table>
 	</form>
+	name - "${em_name}"
+	page - "${pageNum}"
 
 </body>
 </html>

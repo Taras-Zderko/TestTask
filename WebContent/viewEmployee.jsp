@@ -1,4 +1,4 @@
-<%@page import="com.zderko.dao.EmployeeDao,com.zderko.bean.*,java.util.*"%>
+<%@page import="com.zderko.dao.EmployeeDao,com.zderko.entity.*, java.util.List"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -13,7 +13,7 @@
 	if (pageid==0){
 		pageid+=1;
 	}
-	session.setAttribute("s", pageid);
+	session.setAttribute("currentPage", pageid);
 	if(pageid==1){}  
 	else{  
 	    pageid=pageid-1;  
@@ -21,8 +21,11 @@
 	}
 		List<Employee> list = EmployeeDao.getAllRecords(pageid,total);
 		request.setAttribute("list", list);
-		request.setAttribute("count", EmployeeDao.getCountEmployee(total));	
 		session.setAttribute("listSize", list.size());
+		request.setAttribute("count", EmployeeDao.getCountEmployee());
+		int noOfRecords  = EmployeeDao.getCountEmployee();
+		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / total);
+		request.setAttribute("noOfPages", noOfPages);
 		
 %>
 
@@ -64,22 +67,48 @@
 			</tr>
 		</c:forEach>
 	</table>
-	<br/>
-	<div>
-		<a href="viewEmployee.jsp?page=1">first</a>
-		<a href="viewEmployee.jsp?page=${s-1}">prev</a>  
-		<a href="viewEmployee.jsp?page=${s}">${s}</a>  
-		<a href="viewEmployee.jsp?page=${s+1}">${s+1}</a>  
-		<a href="viewEmployee.jsp?page=${s+2}">${s+2}</a>  
-		<a href="viewEmployee.jsp?page=${s+3}">${s+3}</a>  
-		<a href="viewEmployee.jsp?page=${s+4}">${s+4}</a>  
-		<a href="viewEmployee.jsp?page=${s+5}">${s+5}</a>  
-		<a href="viewEmployee.jsp?page=${s+9}">${s+6}</a>  
-		<a href="viewEmployee.jsp?page=${s+7}">${s+7}</a>  
-		<a href="viewEmployee.jsp?page=${s+8}">${s+8}</a>  
-		<a href="viewEmployee.jsp?page=${s+9}">${s+9}</a> 
-		<a href="viewEmployee.jsp?page=${s+1}">next</a>
-		<a href="viewEmployee.jsp?page=${count+1}">last</a>
-	</div>
+	</br>
+	
+	<c:if test="${count > 10}">
+	    <c:if test="${currentPage != 1}">
+	    	<td><a href="viewEmployee.jsp?page=1">First</a></td>
+	        <td><a href="viewEmployee.jsp?page=${currentPage - 1}">Previous</a></td>
+	    </c:if>
+	    
+	    <c:if test="${count <= 100}">
+	    <c:forEach begin="${1}" end="${noOfPages}" var="i">
+	       <c:choose>
+	          <c:when test="${currentPage eq i}">
+	             <td>${i}</td>
+	          </c:when>
+	          <c:otherwise>
+	             <c:if test="${i lt noOfPages+1}"> 
+	             	<td><a href="viewEmployee.jsp?page=${i}">${i}</a></td>
+	             </c:if> 
+	          </c:otherwise>
+	       </c:choose>
+	    </c:forEach>
+		</c:if> 
+		
+	    <c:if test="${count >= 101}">
+		 <c:forEach begin="${currentPage}" end="${currentPage +9}" var="i">
+			<c:choose>
+			   <c:when test="${currentPage eq i}">
+			      <td>${i}</td>
+			   </c:when>
+				<c:otherwise>
+				  <c:if test="${i lt noOfPages+1}"> 
+				   	<td><a href="viewEmployee.jsp?page=${i}">${i}</a></td>
+				  </c:if> 
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+		</c:if> 
+		
+	    <c:if test="${currentPage lt noOfPages}">
+	        <td><a href="viewEmployee.jsp?page=${currentPage + 1}">Next</a></td>
+	        <td><a href="viewEmployee.jsp?page=${noOfPages}">Last</a></td>
+	    </c:if>
+    </c:if>
 </body>
 </html>

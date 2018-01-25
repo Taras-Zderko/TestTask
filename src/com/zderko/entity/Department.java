@@ -2,18 +2,6 @@ package com.zderko.entity;
 
 public class Department {
 	
-	public Department() {
-		super();
-	}
-	public Department(int dp_id, String dp_name) {
-		super();
-		this.dp_id = dp_id;
-		this.dp_name = dp_name;
-	}
-	@Override
-	public String toString() {
-		return "Department [dp_id=" + dp_id + ", dp_name=" + dp_name + "]";
-	}
 	private int dp_id;
 	private String dp_name;
 	
@@ -29,5 +17,8 @@ public class Department {
 	public void setDp_name(String dp_name) {
 		this.dp_name = dp_name;
 	}
-	
+	@Override
+	public String toString() {
+		return "Department [dp_id=" + dp_id + ", dp_name=" + dp_name + "]";
+	}
 }

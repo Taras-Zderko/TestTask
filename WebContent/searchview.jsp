@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@page import="com.zderko.dao.EmployeeDao,com.zderko.bean.*,java.util.*"%>	
+<%@page import="com.zderko.dao.EmployeeDao,com.zderko.entity.*,java.util.*"%>	
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,31 +16,37 @@
 	if (pageid==0){
 		pageid+=1;
 	}
-	request.setAttribute("s", pageid);
+	request.setAttribute("currentPage", pageid);
 	session.setAttribute("searchPageNum", pageid);
-	int pageNumSearch= Integer.parseInt(session.getAttribute("s").toString());
-	request.setAttribute("num", pageNumSearch);
+	int pageNumSearch= Integer.parseInt(session.getAttribute("currentPage").toString());
+	request.setAttribute("numberOfPageInEmployeeList", pageNumSearch);
 	if(pageid==1){}  
 	else{  
 	    pageid=pageid-1;  
 	    pageid=pageid*total+1;  
 	}  
-		
 		String em_name = request.getParameter("em_name");
 		request.setAttribute("em_name", em_name);
-		if(em_name==""){
+		
+		if(em_name.isEmpty()){
 			response.sendRedirect("viewEmployee.jsp?page="+pageNumSearch);
 		}
+		
 		List<Employee> list = EmployeeDao.Search(em_name, pageid,total);
 		request.setAttribute("list", list);
+		session.setAttribute("listSizeSearch", list.size());
+		request.setAttribute("countInSearch", EmployeeDao.getCountSearch(em_name));
+		int noOfRecords  = EmployeeDao.getCountSearch(em_name);
+		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / total);
+		request.setAttribute("noOfPages", noOfPages);
 		
 		
 %>
-<a href="viewEmployee.jsp?page=${num}"><input type="button" value="Back to all"></input></a>
- <c:if test = "${list.size()==0}">
+<a href="viewEmployee.jsp?page=${numberOfPageInEmployeeList}"><input type="button" value="Back to all"></input></a>
+ <c:if test = "${list.isEmpty()}">
    <p>No employee found<p>
 </c:if>
-<c:if test = "${list.size()>0}">
+<c:if test = "${!list.isEmpty()}">
    	<br>
 	<br>
 	<table border="1" width="50%">
@@ -63,20 +69,49 @@
 			</tr>
 		</c:forEach>
 	</table>
-	<c:if test = "${list.size()>=10}">
-   		<a href="searchview.jsp?em_name=${em_name}&page=${s-1}">prev</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s}">${s}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+1}">${s+1}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+2}">${s+2}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+3}">${s+3}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+4}">${s+4}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+5}">${s+5}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+6}">${s+6}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+7}">${s+7}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+8}">${s+8}</a>  
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+9}">${s+9}</a> 
-		<a href="searchview.jsp?em_name=${em_name}&page=${s+1}">next</a>
-	</c:if>
+	</br>
+	
+	<c:if test="${countInSearch > 10}">
+	    <c:if test="${currentPage != 1}">
+	    	<td><a href="searchview.jsp?em_name=${em_name}&page=1">First</a></td>
+	        <td><a href="searchview.jsp?em_name=${em_name}&page=${currentPage - 1}">Previous</a></td>
+	    </c:if>
+	    
+	    <c:if test="${countInSearch <= 100}">
+	    <c:forEach begin="${1}" end="${noOfPages}" var="i">
+	       <c:choose>
+	          <c:when test="${currentPage eq i}">
+	             <td>${i}</td>
+	          </c:when>
+	          <c:otherwise>
+	             <c:if test="${i lt noOfPages+1}"> 
+	             	<td><a href="searchview.jsp?em_name=${em_name}&page=${i}">${i}</a></td>
+	             </c:if> 
+	          </c:otherwise>
+	       </c:choose>
+	    </c:forEach>
+		</c:if> 
+		
+	    <c:if test="${countInSearch >= 101}">
+		 <c:forEach begin="${currentPage}" end="${currentPage +9}" var="i">
+			<c:choose>
+			   <c:when test="${currentPage eq i}">
+			      <td>${i}</td>
+			   </c:when>
+				<c:otherwise>
+				  <c:if test="${i lt noOfPages+1}"> 
+				   	<td><a href="searchview.jsp?em_name=${em_name}&page=${i}">${i}</a></td>
+				  </c:if> 
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+		</c:if> 
+		
+	    <c:if test="${currentPage lt noOfPages}">
+	        <td><a href="searchview.jsp?em_name=${em_name}&page=${currentPage + 1}">Next</a></td>
+	        <td><a href="searchview.jsp?em_name=${em_name}&page=${noOfPages}">Last</a></td>
+	    </c:if>
+    </c:if>
 </c:if>
 </body>
 </html>

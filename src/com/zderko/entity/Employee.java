@@ -2,25 +2,6 @@ package com.zderko.entity;
 
 public class Employee {
 	
-	public Employee() {
-	
-	}
-	
-	public Employee(int em_id, String em_name, boolean em_active, String em_dp_id) {
-		super();
-		this.em_id = em_id;
-		this.em_name = em_name;
-		this.em_active = em_active;
-		this.em_dp_id = em_dp_id;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Employee [em_id=" + em_id + ", em_name=" + em_name + ", em_active=" + em_active + ", em_dp_id=" + em_dp_id + "]";
-	}
-
-
 	private int em_id;
 	private String em_name;
 	private boolean em_active;
@@ -50,6 +31,8 @@ public class Employee {
 	public void setEm_dp_id(String em_dp_id) {
 		this.em_dp_id = em_dp_id;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "Employee [em_id=" + em_id + ", em_name=" + em_name + ", em_active=" + em_active + ", em_dp_id=" + em_dp_id + "]";
+	}
 }

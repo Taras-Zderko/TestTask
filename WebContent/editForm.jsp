@@ -1,5 +1,5 @@
-<%@ page import="com.zderko.dao.EmployeeDao,com.zderko.bean.Employee"%>
-<%@ page import="com.zderko.dao.DepartmentDao,com.zderko.bean.Department"%>
+<%@ page import="com.zderko.dao.EmployeeDao,com.zderko.entity.Employee"%>
+<%@ page import="com.zderko.dao.DepartmentDao,com.zderko.entity.Department"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.List" %>
 <%
@@ -7,7 +7,7 @@
 	Employee employee = EmployeeDao.getRecordById(Integer.parseInt(em_id));
 	List<Department> deplist = DepartmentDao.getAllRecords();
 	request.setAttribute("list", deplist);
-	request.setAttribute("pageNum", Integer.parseInt(session.getAttribute("s").toString()));
+	request.setAttribute("pageNum", Integer.parseInt(session.getAttribute("currentPage").toString()));
 %>
 <!DOCTYPE html>
 <html>

@@ -37,7 +37,7 @@ public class DepartmentDao extends Util {
 	        	deplist.add(department);  
 	        }  
 	    }catch(Exception e){
-	    	System.out.println(e);
+	    	e.printStackTrace();
 			}
 	    return deplist;  
 	}  
