@@ -1,0 +1,59 @@
+CREATE SCHEMA testdb2;
+use testdb2;
+--------------------------------------------------------------------------------------------------
+CREATE TABLE testdb2.departments 
+		(
+dp_id INT NOT NULL,
+ 
+		  dp_name VARCHAR(45) NULL,
+  
+		  PRIMARY KEY (dp_id));
+
+---------------------------------------------------------------------------------------------------
+CREATE TABLE testdb2.employees 
+		(
+em_id INT NOT NULL AUTO_INCREMENT,
+		 em_name` VARCHAR(45) NOT NULL,
+ 
+		 em_active BIT(1) NOT NULL DEFAULT 0,
+		
+ em_dp_id` INT NULL,
+ 
+		 PRIMARY KEY (em_id),
+  
+		 INDEX FK_em_dp_idx (em_dp_id ASC),
+  
+		 INDEX Em_name (em_name ASC),
+  
+		 INDEX Em_All (em_id ASC, em_name, em_active, em_dp_id),
+  
+		 CONSTRAINT FK_em_dp
+ FOREIGN KEY (em_dp_id)
+ REFERENCES testdb2.departments (dp_id)
+    
+		 ON DELETE NO ACTION
+    
+		 ON UPDATE NO ACTION);
+
+----------------------------------------------------------------------------------------------------
+INSERT INTO testdb2.departments (dp_id, dp_name) VALUES ('1', 'QA');
+
+INSERT INTO testdb2.departments (dp_id, dp_name) VALUES ('2', 'HR');
+
+INSERT INTO testdb2.departments (dp_id, dp_name) VALUES ('3', 'Developer');
+
+INSERT INTO testdb2.departments (dp_id, dp_name) VALUES ('4', 'Tester');
+
+INSERT INTO testdb2.departments (dp_id, dp_name) VALUES ('5', 'Finance');
+
+----------------------------------------------------------------------------------------------------
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test1', 0, '1');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test2', 0, '2');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test3', 0, '3');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test4', 0, '4');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test5', 0, '5');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test6', 1, '1');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test7', 1, '2');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test8', 1, '3');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test9', 1, '4');
+INSERT INTO testdb2.employees (em_name, em_active, em_dp_id) VALUES ('test10', 1, '5');
